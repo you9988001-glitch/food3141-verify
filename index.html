@@ -39,7 +39,7 @@
       try {
         if (!window.Pi) throw new Error("Pi SDK 로드 실패");
 
-        Pi.init({ version: "2.0", sandbox: true });
+        Pi.init({ version: "2.0", sandbox: false });
 
         log("Pi 인증 중...");
         await Pi.authenticate(["payments"], () => {});

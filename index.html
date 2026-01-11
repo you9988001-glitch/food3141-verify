@@ -1,409 +1,119 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>code arche49-Pass | CODE ARCHE</title>
+  <title>food3141 결제 테스트</title>
 
   <!-- Pi SDK -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
   <style>
-    :root{
-      --pi-gold:#ffa500;
-      --arche-dark:#0f0f0f;
-      --arche-white:#e0e0e0;
-      --card-bg: rgba(20,20,20,0.92);
-      --border: rgba(255,165,0,0.35);
-    }
-    *{margin:0;padding:0;box-sizing:border-box;font-family:Georgia,serif;scroll-behavior:smooth}
-    body{background:var(--arche-dark);color:var(--arche-white);line-height:1.8;overflow-x:hidden}
-    .bg-overlay{
-      position:fixed;inset:0;
-      background:radial-gradient(circle at center,#1e0b36 0%,#0f0f0f 100%);
-      z-index:-1;
-    }
-    .container{max-width:900px;margin:0 auto;padding:80px 20px}
-    .header{text-align:center;margin-bottom:80px}
-    .project-title{color:var(--pi-gold);font-size:1rem;letter-spacing:6px;text-transform:uppercase;margin-bottom:20px;opacity:.85}
-    .main-project-name{font-size:3.4rem;font-weight:900;color:#fff;text-shadow:0 0 25px rgba(255,165,0,.25);margin-bottom:40px}
-    .divider{width:60px;height:1px;background:var(--pi-gold);margin:30px auto;opacity:.55}
-    .arche-num{color:var(--pi-gold);font-size:1.2rem;font-weight:bold;margin-bottom:10px}
-    .sub-name{font-size:3rem;font-weight:800;margin-bottom:14px}
-    .tagline{font-style:italic;opacity:.65}
-
-    .philosophy{margin-bottom:80px;text-align:center}
-    .philosophy h2{color:var(--pi-gold);font-size:2rem;margin-bottom:34px;font-weight:normal;letter-spacing:2px}
-    .philosophy p{font-size:1.12rem;color:#cfcfcf;margin:0 auto 26px;max-width:780px}
-
-    .conditions{
-      background:rgba(24,24,24,.45);
-      padding:50px;border-radius:12px;margin-bottom:70px;
-      border:1px solid rgba(255,255,255,.06);
-    }
-    .conditions h3{text-align:center;margin-bottom:34px;color:var(--pi-gold);font-size:1.65rem;font-weight:normal;letter-spacing:1px}
-    .condition-list{list-style:none}
-    .condition-list li{margin-bottom:22px;display:flex;align-items:flex-start;font-size:1.05rem;color:#b8b8b8}
-    .condition-list li::before{content:"◈";color:var(--pi-gold);margin-right:14px;opacity:.9}
-
-    .center{text-align:center;margin:0 auto 48px}
-    .center p{margin-bottom:34px;opacity:.75}
-
-    /* ✅ button text staying inside on mobile */
-    .cta-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-
-      padding:18px 56px;
-      background:transparent;
-      color:var(--pi-gold);
-      text-decoration:none;
-      font-weight:bold;
-      border:1px solid var(--pi-gold);
-      transition:.35s;
-
-      font-size: clamp(.98rem, 3.6vw, 1.05rem);
-      letter-spacing: clamp(1px, .8vw, 3px);
-      line-height: 1.15;
-
-      text-transform:uppercase;
-      cursor:pointer;
-      border-radius:999px;
-
-      white-space: normal;
-      word-break: keep-all;
-      min-height: 54px;
-    }
-    .cta-btn:hover{
-      background:var(--pi-gold);
-      color:#000;
-      box-shadow:0 0 40px rgba(255,165,0,.22);
-    }
-    .cta-btn[disabled]{
-      opacity:.45;
-      cursor:not-allowed;
-      box-shadow:none;
-    }
-
-    /* Application section (hidden until user chooses) */
-    #apply-section{
-      display:none;
-      margin-top:50px;
-      padding:54px 38px;
-      background:var(--card-bg);
-      border:1px solid var(--border);
-      border-radius:16px;
-    }
-    #apply-section h3{
-      color:var(--pi-gold);
-      margin-bottom:28px;
-      text-align:center;
-      font-size:1.7rem;
-      font-weight:normal;
-      letter-spacing:1px;
-    }
-    .form-group{margin-bottom:22px;text-align:left}
-    .form-group label{
-      display:block;margin-bottom:10px;
-      color:var(--pi-gold);
-      font-size:.78rem;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      opacity:.95;
-    }
-    .form-group input,.form-group textarea{
-      width:100%;
-      padding:14px 14px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.14);
-      color:#fff;
-      border-radius:10px;
-      outline:none;
-      font-size:1rem;
-    }
-    .form-group textarea{min-height:150px;resize:vertical}
-
-    .row{display:flex;gap:14px;flex-wrap:wrap}
-    .row .cta-btn{flex:1;min-width:240px}
-
-    /* Payment area */
-    .payment-box{
-      margin-top:20px;
-      padding:18px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-      text-align:center;
-    }
-    .payment-title{
-      color:#fff;
-      font-weight:700;
-      letter-spacing:1px;
-      margin-bottom:8px;
-    }
-    .payment-sub{
-      color:#cfcfcf;
-      font-size:.98rem;
-      opacity:.85;
-      margin-bottom:14px;
-    }
-    #payBtn{width:100%}
-    .log{
-      margin-top:14px;
-      font-size:13px;
-      white-space:pre-wrap;
-      background:rgba(0,0,0,.28);
-      padding:12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.08);
-      color:#eaeaea;
-      text-align:left;
-    }
-
-    /* Success banner */
-    #success-banner{
-      display:none;
-      margin-top:18px;
-      padding:14px 16px;
-      border-radius:12px;
-      border:1px solid rgba(255,165,0,.35);
-      background:rgba(255,165,0,.10);
-      color:#fff;
-      text-align:center;
-      letter-spacing:1px;
-    }
-
-    footer{text-align:center;padding:90px 0 20px;font-size:.78rem;opacity:.45;letter-spacing:2px}
-    a{color:inherit}
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 24px; background:#f7f7f8; }
+    .card { max-width: 520px; margin: 0 auto; background: white; border-radius: 16px; padding: 18px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { margin: 0 0 14px; color: #333; line-height: 1.45; }
+    button { width: 100%; padding: 14px 16px; border-radius: 14px; border: 0; font-size: 18px; cursor: pointer; }
+    .primary { background: #6b4eff; color: white; margin-top: 10px; }
+    .dark { background: #111; color: white; margin-top: 10px; }
+    .status { margin-top: 12px; padding: 12px; background: #f1f1f3; border-radius: 12px; font-size: 14px; white-space: pre-wrap; }
+    .small { font-size: 12px; color:#666; margin-top: 10px; }
   </style>
 </head>
 
 <body>
-  <div class="bg-overlay"></div>
+  <div class="card">
+    <h1>food3141 결제 테스트</h1>
+    <p>Step 10 통과용: 아래 버튼을 눌러 결제창을 띄우고 결제를 완료하세요.</p>
 
-  <div class="container">
-    <header class="header">
-      <div class="project-title">Project Name</div>
-      <h1 class="main-project-name">code arche49-Pass:<br>Pi Genesis</h1>
-      <div class="divider"></div>
-      <div class="arche-num">CODE ARCHE #22</div>
-      <h2 class="sub-name">THIA</h2>
-      <p class="tagline">"The Journey to the Origin of Digital Ecosystem"</p>
-    </header>
+    <button class="primary" id="payBtn">0.01 Pi 결제 테스트</button>
+    <button class="dark" id="apiBtn">API(서버) 테스트</button>
 
-    <section class="philosophy">
-      <h2>Our Philosophy</h2>
-      <p>
-        We pay our deepest respect to the values of true equality and decentralization pursued by the Pi Network.
-        We envision a new digital soil where human life, art, and philosophy coexist beyond a mere collection of technologies.
-      </p>
-      <p>
-        Code Arche represents the 49 pillars to be erected upon that soil.
-        We are not seeking mere owners of these domains; we are searching for Guardians who will realize the vision of the Pi ecosystem together.
-      </p>
-    </section>
-
-    <section class="conditions">
-      <h3>The Ritual: Guardian Qualifications</h3>
-      <ul class="condition-list">
-        <li>Do you deeply understand and respect the core philosophy of the Pi Network?</li>
-        <li>Are you prepared to add artistic and philosophical value to the Pi ecosystem through this domain?</li>
-        <li>Do you pledge a substantial contribution to ecosystem activation rather than mere speculation?</li>
-        <li>Will you join the Code Arche project as an integral member of the digital community?</li>
-      </ul>
-    </section>
-
-    <div class="center">
-      <p>If you resonate with these values, share your vision with us.</p>
-      <button class="cta-btn" id="openApplyBtn" type="button">Apply for Guardianship</button>
-    </div>
-
-    <section id="apply-section">
-      <h3>Guardian Application</h3>
-
-      <!-- ✅ No Formspree. Payment-gated serverless submission. -->
-      <form id="guardianForm">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" name="name" required />
-        </div>
-
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" name="email" required />
-        </div>
-
-        <div class="form-group">
-          <label>Your Vision & Philosophy</label>
-          <textarea name="vision" required placeholder="Describe how you will contribute to the Pi ecosystem..."></textarea>
-        </div>
-
-        <div class="payment-box">
-          <div class="payment-title">Verification Payment</div>
-          <div class="payment-sub">Complete a 0.01 Pi test payment in Pi Browser to finalize verification.</div>
-
-          <button class="cta-btn" id="payBtn" type="button">0.01 Pi Test Payment</button>
-
-          <div id="success-banner">Thank you, future Guardian.</div>
-          <div class="log" id="log">Standing by…</div>
-        </div>
-
-        <div class="row" style="margin-top:20px;">
-          <button class="cta-btn" type="submit" id="submitBtn" disabled>Submit Application</button>
-          <button class="cta-btn" type="button" id="closeApplyBtn">Close</button>
-        </div>
-      </form>
-    </section>
-
-    <footer>
-      <p>&copy; 2026 CODE ARCHE. All Rights Reserved.<br>IN RECOGNITION OF PI NETWORK GENESIS PHILOSOPHY.</p>
-    </footer>
+    <div class="status" id="status">대기 중…</div>
+    <div class="small">※ “개발자가 승인 못함(시간초과)”가 뜨면 approve API 호출이 실패한 거예요.</div>
   </div>
 
   <script>
-    // ===== UI helpers =====
-    const applySection = document.getElementById("apply-section");
-    const openApplyBtn = document.getElementById("openApplyBtn");
-    const closeApplyBtn = document.getElementById("closeApplyBtn");
-    const logEl = document.getElementById("log");
-    const successBanner = document.getElementById("success-banner");
-    const formEl = document.getElementById("guardianForm");
-    const submitBtn = document.getElementById("submitBtn");
+    const statusEl = document.getElementById("status");
+    const setStatus = (msg) => statusEl.textContent = msg;
 
-    const setLog = (m) => { logEl.textContent = m; };
+    // Pi SDK 초기화
+    Pi.init({ version: "2.0" });
 
-    function openForm() {
-      applySection.style.display = "block";
-      applySection.scrollIntoView({ behavior: "smooth", block: "start" });
+    async function ensureAuth() {
+      // payments 권한 필요
+      const auth = await Pi.authenticate(["payments"], onIncompletePaymentFound);
+      return auth;
     }
 
-    function closeForm() {
-      applySection.style.display = "none";
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    function onIncompletePaymentFound(payment) {
+      // 중간에 끊긴 결제가 있으면 여기로 들어올 수 있음
+      console.log("Incomplete payment found:", payment);
     }
 
-    openApplyBtn.addEventListener("click", openForm);
-    closeApplyBtn.addEventListener("click", closeForm);
-
-    // ===== Payment proof gate =====
-    let proofToken = null;
-    submitBtn.disabled = true;
-
-    function setVerifiedUI() {
-      submitBtn.disabled = false;
-      successBanner.style.display = "block";
-      successBanner.textContent = "Thank you, future Guardian.";
+    async function apiTest() {
+      setStatus("API 테스트 중… (/api/approve 호출은 paymentId가 필요해서 지금은 /api 라우트 존재 여부만 확인)\n\n- 결제 버튼을 눌러 실제 승인/완료 흐름을 타야 합니다.");
+      // 여기서는 단순 안내만.
     }
-
-    // ===== Form submit: /api/contact (payment required) =====
-    formEl.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      if (!proofToken) {
-        setLog("Payment verification is required before submitting.");
-        return;
-      }
-
-      try {
-        const fd = new FormData(formEl);
-        const payload = {
-          name: fd.get("name"),
-          email: fd.get("email"),
-          vision: fd.get("vision"),
-          proofToken
-        };
-
-        setLog("Submitting…");
-        const r = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (r.ok) {
-          successBanner.style.display = "block";
-          successBanner.textContent = "Thank you, future Guardian.";
-          setLog("Application submitted successfully.");
-          setTimeout(() => {
-            formEl.reset();
-            submitBtn.disabled = true;
-            proofToken = null;
-            successBanner.style.display = "none";
-            closeForm();
-          }, 1200);
-        } else {
-          const err = await r.json().catch(() => ({}));
-          setLog("Submission failed: " + (err?.error || "Please try again."));
-        }
-      } catch (err) {
-        setLog("Submission error: " + (err?.message || err));
-      }
-    });
-
-    // ===== Pi Payment (English only in our UI) =====
-    Pi.init({ version: "2.0",
-  sandbox: true,
- });
 
     async function startPayment() {
-  try {
-    setLog("Authenticating with Pi…");
+      try {
+        setStatus("Pi 인증 중…");
+        await ensureAuth();
 
-    // ✅ 1번만 호출 + pending 결제 발견 시 안내
-    await Pi.authenticate(["payments"], (payment) => {
-      // 결제가 미완료로 남아있을 때 여기로 들어올 수 있어
-      setLog("Found an incomplete payment. Please cancel/complete it, then try again.");
-    });
+        setStatus("결제 생성 중… (지갑 화면으로 넘어가면 승인/완료는 서버가 자동 처리해야 함)");
 
-    setLog("Creating payment…");
+        const paymentData = {
+          amount: 0.01,
+          memo: "food3141 step10 test",
+          metadata: { app: "food3141", purpose: "checklist-step10" },
+        };
 
-    Pi.createPayment(
-      {
-        amount: 0.01,
-        memo: "voice play verification",
-        metadata: { app: "voice-play" }
-      },
-      {
-        onReadyForServerApproval: async (paymentId) => {
-          setLog("Requesting server approval…");
-          const r = await fetch("/api/approve", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ paymentId })
-          });
-          if (!r.ok) throw new Error("Approval failed: " + r.status);
-          setLog("Approved. Waiting for completion…");
-        },
+        const callbacks = {
+          onReadyForServerApproval: async function(paymentId) {
+            setStatus("서버 승인 요청 중…\npaymentId: " + paymentId);
+            const r = await fetch("/api/approve", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ paymentId })
+            });
+            const j = await r.json().catch(() => ({}));
+            if (!r.ok) throw new Error("approve failed: " + JSON.stringify(j));
+            setStatus("서버 승인 완료 ✅\n이제 지갑에서 전송 승인 후, 서버 complete 단계로 갑니다.");
+          },
 
-        onReadyForServerCompletion: async (paymentId, txid) => {
-          setLog("Completing payment…");
-          const r = await fetch("/api/complete", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ paymentId, txid })
-          });
+          onReadyForServerCompletion: async function(paymentId, txid) {
+            setStatus("서버 완료 요청 중…\npaymentId: " + paymentId + "\ntxid: " + txid);
+            const r = await fetch("/api/complete", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ paymentId, txid })
+            });
+            const j = await r.json().catch(() => ({}));
+            if (!r.ok) throw new Error("complete failed: " + JSON.stringify(j));
+            setStatus("결제 완료 ✅ (complete까지 성공)\n이제 체크리스트에서 Step 10이 갱신되어야 합니다.");
+          },
 
-          const data = await r.json().catch(() => ({}));
-          if (!r.ok || !data?.proofToken) throw new Error("Completion failed.");
+          onCancel: function(paymentId) {
+            setStatus("사용자가 결제를 취소했어요.\npaymentId: " + paymentId);
+          },
 
-          proofToken = data.proofToken;
-          setVerifiedUI();
-          setLog("Payment completed ✅ You may submit your application.");
-        },
+          onError: function(error, payment) {
+            setStatus("에러 발생 ❌\n" + (error?.message || JSON.stringify(error)) + "\n\npayment:\n" + JSON.stringify(payment, null, 2));
+          }
+        };
 
-        onCancel: () => setLog("Payment was cancelled by the user."),
-        onError: (e) => setLog("Payment error: " + (e?.message || e))
+        // sandbox 옵션은 여기서 건드리지 말고(헷갈림 방지),
+        // 지금은 Step10 통과가 목표니까 기본 흐름으로 갑니다.
+        Pi.createPayment(paymentData, callbacks);
+
+      } catch (e) {
+        setStatus("초기화/인증 실패 ❌\n" + String(e));
       }
-    );
-  } catch (e) {
-    setLog("Payment failed: " + (e?.message || e));
-  }
-}
+    }
 
     document.getElementById("payBtn").addEventListener("click", startPayment);
+    document.getElementById("apiBtn").addEventListener("click", apiTest);
   </script>
 </body>
 </html>
-

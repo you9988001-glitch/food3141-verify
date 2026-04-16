@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pi RPC 테스트</title>
+  <title>Pi RPC Test</title>
 
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
@@ -22,14 +22,14 @@
 
 <body>
   <div class="card">
-    <h1>Pi RPC 테스트</h1>
-    <p>RPC 연결 확인 및 결제 테스트</p>
+    <h1>Pi RPC Test</h1>
+    <p>RPC Connection & Payment Test</p>
 
-    <button class="primary" id="payBtn">0.01 Pi 결제 테스트</button>
-    <button class="dark" id="apiBtn">RPC 테스트 (getHealth)</button>
+    <button class="primary" id="payBtn">0.01 Test Pi Payment</button>
+    <button class="dark" id="apiBtn">RPC Test (getHealth)</button>
 
-    <div class="status" id="status">대기 중…</div>
-    <div class="small">※ RPC 버튼을 누르면 Pi 테스트넷 상태를 확인합니다.</div>
+    <div class="status" id="status">Waiting…</div>
+    <div class="small">※ Press the RPC button to check Pi Testnet status.</div>
   </div>
 
   <script>
@@ -48,7 +48,7 @@
     }
 
     async function apiTest() {
-      setStatus("RPC 테스트 중…");
+      setStatus("Testing RPC…");
       try {
         const r = await fetch("https://rpc.testnet.minepi.com", {
           method: "POST",
@@ -60,18 +60,18 @@
           })
         });
         const j = await r.json();
-        setStatus("RPC 응답:\n" + JSON.stringify(j, null, 2));
+        setStatus("RPC Response:\n" + JSON.stringify(j, null, 2));
       } catch(e) {
-        setStatus("RPC 실패:\n" + String(e));
+        setStatus("RPC Failed:\n" + String(e));
       }
     }
 
     async function startPayment() {
       try {
-        setStatus("Pi 인증 중…");
+        setStatus("Authenticating Pi…");
         await ensureAuth();
 
-        setStatus("결제 생성 중…");
+        setStatus("Creating payment…");
 
         const paymentData = {
           amount: 0.01,
@@ -81,7 +81,7 @@
 
         const callbacks = {
           onReadyForServerApproval: async function(paymentId) {
-            setStatus("서버 승인 요청 중…\npaymentId: " + paymentId);
+            setStatus("Requesting server approval…\npaymentId: " + paymentId);
             const r = await fetch("/api/approve", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -89,11 +89,11 @@
             });
             const j = await r.json().catch(() => ({}));
             if (!r.ok) throw new Error("approve failed: " + JSON.stringify(j));
-            setStatus("서버 승인 완료 ✅");
+            setStatus("Server approval complete ✅");
           },
 
           onReadyForServerCompletion: async function(paymentId, txid) {
-            setStatus("서버 완료 요청 중…\npaymentId: " + paymentId + "\ntxid: " + txid);
+            setStatus("Requesting server completion…\npaymentId: " + paymentId + "\ntxid: " + txid);
             const r = await fetch("/api/complete", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -101,22 +101,22 @@
             });
             const j = await r.json().catch(() => ({}));
             if (!r.ok) throw new Error("complete failed: " + JSON.stringify(j));
-            setStatus("결제 완료 ✅");
+            setStatus("Payment complete ✅");
           },
 
           onCancel: function(paymentId) {
-            setStatus("결제 취소됨.\npaymentId: " + paymentId);
+            setStatus("Payment cancelled.\npaymentId: " + paymentId);
           },
 
           onError: function(error, payment) {
-            setStatus("에러 발생 ❌\n" + (error?.message || JSON.stringify(error)));
+            setStatus("Error occurred ❌\n" + (error?.message || JSON.stringify(error)));
           }
         };
 
         Pi.createPayment(paymentData, callbacks);
 
       } catch (e) {
-        setStatus("초기화/인증 실패 ❌\n" + String(e));
+        setStatus("Init/Auth failed ❌\n" + String(e));
       }
     }
 
